@@ -14,17 +14,17 @@ class Connect4(TwoPlayerGame):
         self.pile = 20
         self.current_player = 1
         self.board = [['x' for i in range(self.width)] for j in range(self.height)]
+        self.counter = 0  # human even, ai odd
 
     def possible_moves(self):
         return ['0', '1', '2', '3', '4', '5', '6']
 
     def make_move(self, move):
         player_move = int(move)
-        board_height = len(self.board[int(move)])
-
-        for i in range(board_height - 1, -1, -1):
-            if '' not in self.board[int(move)][i]:
-                print("todo")
+        for i in range(self.height - 1, -1, -1):
+            if 'x' in self.board[i][player_move]:
+                self.board[i][int(move)] = '@'
+                return self.board
 
     def win(self):
         return self.pile <= 0
@@ -33,7 +33,7 @@ class Connect4(TwoPlayerGame):
         return self.win()
 
     def show(self):
-        print("%d bones left in the self pile" % self.pile)
+        print('\n'.join(['\t'.join([str(cell) for cell in row]) for row in self.board]))
 
     def scoring(self):
         return 100 if self.win() else 0
