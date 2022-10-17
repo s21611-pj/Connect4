@@ -49,7 +49,17 @@ class Connect4(TwoPlayerGame):
                     counter = 0
                 if counter >= 4:
                     return True
+
         # Check for win verticaly
+        for y in range(self.width):
+            counter = 0
+            for x in range(self.height):
+                if self.board[x][y] == symbol:
+                    counter += 1
+                else:
+                    counter = 0
+                if counter >= 4:
+                    return True
         # Check for win diagonally
 
         return False
