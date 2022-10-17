@@ -1,7 +1,18 @@
 from easyAI import TwoPlayerGame, Human_Player, AI_Player, Negamax
 import numpy as np
+from scipy.signal import convolve2d
+
 
 # Authors: Wojciech Turek, Paweł Badysiak
+
+def get_detection_kernels():
+    horizontal_kernel = np.array([[1, 1, 1, 1]])
+    vertical_kernel = np.transpose(horizontal_kernel)
+    diag1_kernel = np.eye(4, dtype=np.uint8)
+    diag2_kernel = np.fliplr(diag1_kernel)
+    detection_kernels = [horizontal_kernel, vertical_kernel, diag1_kernel, diag2_kernel]
+    return detection_kernels
+
 
 class Connect4(TwoPlayerGame):
 
@@ -24,45 +35,43 @@ class Connect4(TwoPlayerGame):
         player_move = int(move)
         for i in range(self.height - 1, -1, -1):
             if 'x' in self.board[i][player_move]:
-                if self.roundCounter % 2 == 0:
+                if self.player == "Human":
                     self.board[i][int(move)] = self.HumanPlayerSymbol
                 else:
                     self.board[i][int(move)] = self.AIPlayerSymbol
-                self.roundCounter += 1
+                # self.roundCounter += 1
                 return self.board
 
-    def win(self):
-        """ TBD """
-        symbol = ''
-        if (self.roundCounter -1) % 2 == 0:
-            symbol = self.HumanPlayerSymbol
+    def rewrite_board(self, current_player_symbol):
+        new_board = np.zeros((6, 7))
+        for i in range(self.height):
+            for j in range(self.width):
+                if self.board[i][j] == current_player_symbol:
+                    new_board[i][j] = 1
+        return new_board
+
+    def winning_move(self):
+
+        dictionary = {
+            "Human": 1,
+            "AI": 0
+        }
+
+        if self.player == "Human":
+            player_symbol = self.HumanPlayerSymbol
+            board_with_specific_symbol = self.rewrite_board(player_symbol)
         else:
-            symbol = self.AIPlayerSymbol
+            player_symbol = self.AIPlayerSymbol
+            board_with_specific_symbol = self.rewrite_board(player_symbol)
 
-        # Check for win horizontaly
-        for x in range(self.height):
-            counter = 0
-            for y in range(self.width):
-                if self.board[x][y] == symbol:
-                    counter += 1
-                else:
-                    counter = 0
-                if counter >= 4:
-                    return True
-
-        # Check for win verticaly
-        for y in range(self.width):
-            counter = 0
-            for x in range(self.height):
-                if self.board[x][y] == symbol:
-                    counter += 1
-                else:
-                    counter = 0
-                if counter >= 4:
-                    return True
-        # Check for win diagonally
-
+        for kernel in get_detection_kernels():
+            # board_numpy = np.array(self.board)
+            if (convolve2d(board_with_specific_symbol == dictionary[player_symbol], kernel, mode="valid") == 4).any():
+                return True
         return False
+
+    def win(self):
+        return self.winning_move()
 
     def is_over(self):
         """ Game is over when someone wins """
@@ -75,6 +84,7 @@ class Connect4(TwoPlayerGame):
     def scoring(self):
         """ Assigns one point to winner """
         return 1 if self.win() else 0
+
 
 ai = Negamax(1)
 game = Connect4([Human_Player(), AI_Player(ai)])
