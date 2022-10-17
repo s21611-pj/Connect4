@@ -42,11 +42,12 @@ class Connect4(TwoPlayerGame):
                 return self.board
 
     def rewrite_board(self, current_player_symbol):
-        new_board = np.zeros((6, 7))
+        dictionary = {"PL": 1, "AI": 0}
+        new_board = 2*np.ones((6, 7))
         for i in range(self.height):
             for j in range(self.width):
                 if self.board[i][j] == current_player_symbol:
-                    new_board[i][j] = 1
+                    new_board[i][j] = dictionary[current_player_symbol]
         return new_board
 
     def winning_move(self):
@@ -54,13 +55,19 @@ class Connect4(TwoPlayerGame):
         if self.player.name == "Human":
             player_symbol = self.HumanPlayerSymbol
             board_with_specific_symbol = self.rewrite_board(player_symbol)
+            for kernel in get_detection_kernels():
+                if (convolve2d(board_with_specific_symbol == 1, kernel, mode="valid") == 4).any():
+                    return True
         else:
             player_symbol = self.AIPlayerSymbol
             board_with_specific_symbol = self.rewrite_board(player_symbol)
+            for kernel in get_detection_kernels():
+                if (convolve2d(board_with_specific_symbol == 0, kernel, mode="valid") == 4).any():
+                    return True
 
-        for kernel in get_detection_kernels():
-            if (convolve2d(board_with_specific_symbol == 1, kernel, mode="valid") == 4).any():
-                return True
+        # for kernel in get_detection_kernels():
+        #     if (convolve2d(board_with_specific_symbol == 1, kernel, mode="valid") == 4).any():
+        #         return True
         return False
 
     def win(self):
