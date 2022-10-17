@@ -52,10 +52,10 @@ class Connect4(TwoPlayerGame):
     def winning_move(self):
 
         if self.player.name == "Human":
-            player_symbol = self.HumanPlayerSymbol
+            player_symbol = self.AIPlayerSymbol
             board_with_specific_symbol = self.rewrite_board(player_symbol)
         else:
-            player_symbol = self.AIPlayerSymbol
+            player_symbol = self.HumanPlayerSymbol
             board_with_specific_symbol = self.rewrite_board(player_symbol)
 
         for kernel in get_detection_kernels():
