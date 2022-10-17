@@ -53,7 +53,7 @@ class Connect4(TwoPlayerGame):
     def winning_move(self):
 
         dictionary = {
-            "Human": 1,
+            "PL": 1,
             "AI": 0
         }
 
