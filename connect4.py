@@ -17,23 +17,24 @@ def get_detection_kernels():
 class Connect4(TwoPlayerGame):
 
     def __init__(self, players):
-        """Game Initialization with fixed board size"""
+        """Game Initialization with fixed board size filled with zeroes"""
         self.players = players
         self.current_player = 1
         self.width = 7
         self.height = 6
-        self.board = np.array([['x' for x in range(self.width)] for y in range(self.height)])
-        self.roundCounter = 0  # human even, ai odd
+        self.board = np.array([[0 for x in range(self.width)] for y in range(self.height)])
+        self.roundCounter = 0
 
     def possible_moves(self):
-        return ['0', '1', '2', '3', '4', '5', '6']
+        return [i for i in range(self.width) if (self.board[:, i].min() == 0)]
 
     def make_move(self, move):
         """ TBD """
         player_move = int(move)
         for i in range(self.height - 1, -1, -1):
-            if 'x' in self.board[i][player_move]:
+            if self.board[i][player_move] == 0:
                 self.board[i][int(move)] = self.current_player
+                self.roundCounter += 1
                 return self.board
 
     def rewrite_board(self, current_player_symbol):
