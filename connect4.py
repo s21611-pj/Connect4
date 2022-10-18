@@ -29,13 +29,10 @@ class Connect4(TwoPlayerGame):
         return [i for i in range(self.width) if (self.board[:, i].min() == 0)]
 
     def make_move(self, move):
-        """ TBD """
-        player_move = int(move)
-        for i in range(self.height - 1, -1, -1):
-            if self.board[i][player_move] == 0:
-                self.board[i][int(move)] = self.current_player
-                self.roundCounter += 1
-                return self.board
+        """ Finding first possible row index from the bottom,
+         for provided column index (move) """
+        line = np.argmin(self.board[:, move] != 0)
+        self.board[line, move] = self.current_player
 
     def rewrite_board(self, current_player_symbol):
         new_board = np.zeros((6, 7))
