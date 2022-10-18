@@ -34,24 +34,11 @@ class Connect4(TwoPlayerGame):
         line = np.argmin(self.board[:, move] != 0)
         self.board[line, move] = self.current_player
 
-    def rewrite_board(self, current_player_symbol):
-        new_board = np.zeros((6, 7))
-        for i in range(self.height):
-            for j in range(self.width):
-                if self.board[i][j] == current_player_symbol:
-                    new_board[i][j] = 1
-        return new_board
-
-    def winning_move(self):
-        board_with_specific_symbol = self.rewrite_board(self.current_player)
-
+    def win(self):
         for kernel in get_detection_kernels():
-            if (convolve2d(board_with_specific_symbol == 1, kernel, mode="valid") == 4).any():
+            if (convolve2d(self.board == self.current_player, kernel, mode="valid") == 4).any():
                 return True
         return False
-
-    def win(self):
-        return self.winning_move()
 
     def is_over(self):
         """ Game is over when someone wins the round """
