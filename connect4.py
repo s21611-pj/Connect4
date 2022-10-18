@@ -59,7 +59,8 @@ class Connect4(TwoPlayerGame):
 
     def show(self):
         """ Prints whole board after each move """
-        print('\n'.join(['\t'.join([str(cell) for cell in row]) for row in self.board]))
+        reverse_board = self.board[::-1]
+        print('\n'.join(['\t'.join([str(cell) for cell in row]) for row in reverse_board]))
 
     def scoring(self):
         """ Assigns one point to winner """
