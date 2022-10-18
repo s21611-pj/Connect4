@@ -22,10 +22,8 @@ class Connect4(TwoPlayerGame):
         self.current_player = 1
         self.width = 7
         self.height = 6
-        self.board = [['x' for i in range(self.width)] for j in range(self.height)]
+        self.board = np.array([['x' for x in range(self.width)] for y in range(self.height)])
         self.roundCounter = 0  # human even, ai odd
-        self.HumanPlayerSymbol = 'PL'
-        self.AIPlayerSymbol = 'AI'
 
     def possible_moves(self):
         return ['0', '1', '2', '3', '4', '5', '6']
@@ -35,10 +33,7 @@ class Connect4(TwoPlayerGame):
         player_move = int(move)
         for i in range(self.height - 1, -1, -1):
             if 'x' in self.board[i][player_move]:
-                if self.player.name == "Human":
-                    self.board[i][int(move)] = self.HumanPlayerSymbol
-                else:
-                    self.board[i][int(move)] = self.AIPlayerSymbol
+                self.board[i][int(move)] = self.current_player
                 return self.board
 
     def rewrite_board(self, current_player_symbol):
@@ -50,13 +45,7 @@ class Connect4(TwoPlayerGame):
         return new_board
 
     def winning_move(self):
-
-        if self.player.name == "Human":
-            player_symbol = self.AIPlayerSymbol
-            board_with_specific_symbol = self.rewrite_board(player_symbol)
-        else:
-            player_symbol = self.HumanPlayerSymbol
-            board_with_specific_symbol = self.rewrite_board(player_symbol)
+        board_with_specific_symbol = self.rewrite_board(self.current_player)
 
         for kernel in get_detection_kernels():
             if (convolve2d(board_with_specific_symbol == 1, kernel, mode="valid") == 4).any():
@@ -67,7 +56,7 @@ class Connect4(TwoPlayerGame):
         return self.winning_move()
 
     def is_over(self):
-        """ Game is over when someone wins """
+        """ Game is over when someone wins the round """
         return self.win()
 
     def show(self):
