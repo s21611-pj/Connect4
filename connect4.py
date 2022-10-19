@@ -55,9 +55,9 @@ class Connect4(TwoPlayerGame):
         line = np.argmin(self.board[:, move] != 0)
         self.board[line, move] = self.current_player
 
-    def win(self):
+    def lose(self):
         for kernel in get_detection_kernels():
-            if (convolve2d(self.board == self.current_player, kernel, mode="valid") == 4).any():
+            if (convolve2d(self.board == self.opponent_index, kernel, mode="valid") == 4).any():
                 return True
         return False
 
@@ -65,7 +65,7 @@ class Connect4(TwoPlayerGame):
         """ Returns:
             bool: True if the game is over.
         """
-        return self.win()
+        return self.lose()
 
     def show(self):
         """ Prints whole board after each move """
@@ -74,9 +74,9 @@ class Connect4(TwoPlayerGame):
 
     def scoring(self):
         """ Assigns one point to winner """
-        return 1 if self.win() else 0
+        return -1 if self.lose() else 0
 
 
-ai = Negamax(5)
+ai = Negamax(7)
 game = Connect4([Human_Player(), AI_Player(ai)])
 history = game.play()
