@@ -1,7 +1,14 @@
 """
 Authors: Paweł Badysiak (s21166), Wojciech Turek (s21611)
-Connect4 Rules -> https://www.youtube.com/watch?v=ejHQw0g2iKM&ab_channel=Hasbro
-How to run -> in console open folder with connect4.py and run command "python connect4.py" to play the game
+Connect4 Rules video -> https://www.youtube.com/watch?v=ejHQw0g2iKM&ab_channel=Hasbro
+Connect4 Rules text PL -> https://pl.wikipedia.org/wiki/Czw%C3%B3rki
+Connect4 Rules text ENG -> https://en.wikipedia.org/wiki/Connect_Four
+How to run:
+Install:
+1. Numpy -> in terminal 'pip install numpy'
+2. esayAI -> in terminal 'pip install easyAI'
+After instalation:
+-> in console open folder with connect4.py and run command "python connect4.py" to play the game
 """
 
 from easyAI import TwoPlayerGame, Human_Player, AI_Player, Negamax
@@ -23,7 +30,11 @@ def get_detection_kernels():
 class Connect4(TwoPlayerGame):
 
     def __init__(self, players):
-        """Game Initialization with fixed board size filled with zeroes"""
+        """Game Initialization with fixed board size filled with zeroes
+
+        Parameters:
+            players (list): List containing 2 players
+        """
         self.players = players
         self.current_player = 1
         self.width = 7
@@ -32,11 +43,16 @@ class Connect4(TwoPlayerGame):
         self.roundCounter = 0
 
     def possible_moves(self):
+        """ Returns:
+            list: List of possible moves.
+        """
         return [i for i in range(self.width) if (self.board[:, i].min() == 0)]
 
     def make_move(self, move):
-        """ Finding first possible row index from the bottom,
-         for provided column index (move) """
+        """ Places a piece on the bottom of the board.
+            Parameters:
+            move (int): Position on the board.
+        """
         line = np.argmin(self.board[:, move] != 0)
         self.board[line, move] = self.current_player
 
@@ -47,7 +63,9 @@ class Connect4(TwoPlayerGame):
         return False
 
     def is_over(self):
-        """ Game is over when someone wins the round """
+        """ Returns:
+            bool: True if the game is over.
+        """
         return self.win()
 
     def show(self):
