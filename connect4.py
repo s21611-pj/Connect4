@@ -26,7 +26,6 @@ def get_detection_kernels():
     detection_kernels = [horizontal_kernel, vertical_kernel, diag1_kernel, diag2_kernel]
     return detection_kernels
 
-
 class Connect4(TwoPlayerGame):
 
     def __init__(self, players):
@@ -78,6 +77,6 @@ class Connect4(TwoPlayerGame):
         return 1 if self.win() else 0
 
 
-ai = Negamax(1)
+ai = Negamax(5)
 game = Connect4([Human_Player(), AI_Player(ai)])
 history = game.play()
