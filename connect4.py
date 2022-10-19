@@ -16,8 +16,6 @@ import numpy as np
 from scipy.signal import convolve2d
 
 
-# Authors: Wojciech Turek, Paweł Badysiak
-
 def get_detection_kernels():
     horizontal_kernel = np.array([[1, 1, 1, 1]])
     vertical_kernel = np.transpose(horizontal_kernel)
@@ -73,10 +71,24 @@ class Connect4(TwoPlayerGame):
         print('\n'.join(['\t'.join([str(cell) for cell in row]) for row in reverse_board]))
 
     def scoring(self):
-        """ Assigns one point to winner """
+        """ Decreases one point from the loser """
         return -1 if self.lose() else 0
 
 
-ai = Negamax(7)
-game = Connect4([Human_Player(), AI_Player(ai)])
-history = game.play()
+if __name__ == "__main__":
+
+    """
+        Game runner
+        Setting up Negamax to 7 moves ahead intelligent
+        Game contains two players - Human and Artificial Intelligence
+    """
+    ai = Negamax(7)
+    game = Connect4([Human_Player(), AI_Player(ai)])
+    history = game.play()
+    if game.lose():
+        if game.opponent_index == 1:
+            print("Human has won")
+        elif game.opponent_index == 2:
+            print("AI has won")
+        else:
+            print("Draw")
