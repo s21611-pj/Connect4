@@ -1,3 +1,9 @@
+"""
+Authors: Paweł Badysiak (s21166), Wojciech Turek (s21611)
+Connect4 Rules -> https://www.youtube.com/watch?v=ejHQw0g2iKM&ab_channel=Hasbro
+How to run -> in console open folder with connect4.py and run command "python connect4.py" to play the game
+"""
+
 from easyAI import TwoPlayerGame, Human_Player, AI_Player, Negamax
 import numpy as np
 from scipy.signal import convolve2d
